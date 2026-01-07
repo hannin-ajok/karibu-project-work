@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karibu Groceries LTD | Inventory System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="loginOverlay" class="login-overlay">
+      <div class="card login-card p-5 shadow-lg">
+        <h2 class="mb-4 text-primary">KGL Management</h2>
+        <p class="mb-4">Select your role to access the system:</p>
+        <div class="d-grid gap-3">
+          <button
+            class="btn btn-outline-primary btn-lg"
+            onclick="login('Manager')"
+          >
+            Branch Manager
+          </button>
+          <button
+            class="btn btn-outline-success btn-lg"
+            onclick="login('SalesAgent')"
+          >
+            Sales Agent
+          </button>
+          <button
+            class="btn btn-outline-dark btn-lg"
+            onclick="login('Director')"
+          >
+            Mr. Orban (Director)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block sidebar py-4">
+          <h4 class="text-center mb-4">KGL Portal</h4>
+          <div
+            class="nav flex-column nav-pills"
+            id="v-pills-tab"
+            role="tablist"
+          >
+            <button
+              class="nav-link mb-2"
+              id="nav-procurement-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#nav-procurement"
+            >
+              Procurement
+            </button>
+            <button
+              class="nav-link mb-2"
+              id="nav-sales-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#nav-sales"
+            >
+              Produce Sales
+            </button>
+            <button
+              class="nav-link mb-2"
+              id="nav-credit-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#nav-credit"
+            >
+              Credit Records
+            </button>
+            <button
+              class="nav-link mb-2"
+              id="nav-director-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#nav-director"
+            >
+              Director Reports
+            </button>
+          </div>
+          <div class="mt-auto p-3 text-center border-top border-secondary">
+            <small id="userBadge" class="d-block mb-2 text-info"></small>
+            <button
+              class="btn btn-danger btn-sm w-100"
+              onclick="location.reload()"
+            >
+              Logout
+            </button>
+          </div>
+        </nav>
+
+        <main class="col-md-10 ms-sm-auto px-md-4 py-4">
+          <div id="alertContainer"></div>
+
+          <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade" id="nav-procurement" role="tabpanel">
+              <h3 class="mb-4">New Stock Procurement</h3>
+              <div class="card p-4">
+                <form id="procurementForm" class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Produce Name</label>
+                    <select class="form-select" id="procName" required>
+                      <option value="Beans">Beans</option>
+                      <option value="Grain Maize">Grain Maize</option>
+                      <option value="Cow peas">Cow peas</option>
+                      <option value="G-nuts">G-nuts</option>
+                      <option value="Soybeans">Soybeans</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Type (Alphabets only)</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="procType"
+                      pattern="[A-Za-z]{2,}"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Tonnage (min 1000kg)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="procTonnage"
+                      min="1000"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Cost (UgX)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="procCost"
+                      min="10000"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Selling Price (UgX)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="sellPrice"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Dealer Contact</label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="contact"
+                      placeholder="07XXXXXXXX"
+                      required
+                    />
+                  </div>
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                      Record Stock
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-sales" role="tabpanel">
+              <h3 class="mb-4">Record Daily Sale</h3>
+              <div class="card p-4 border-success">
+                <form id="salesForm" class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Select Produce</label>
+                    <select
+                      class="form-select"
+                      id="saleProduce"
+                      required
+                      onchange="updateStockDisplay()"
+                    ></select>
+                    <p
+                      id="stockLevelDisplay"
+                      class="mt-2 fw-bold text-muted"
+                    ></p>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Quantity to Sell (kg)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="saleTonnage"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Amount Paid (UgX)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="salePaid"
+                      min="10000"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Buyer's Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="buyerName"
+                      minlength="2"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Sales Agent</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="agentName"
+                      required
+                    />
+                  </div>
+                  <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-success px-5">
+                      Submit Sale
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-credit" role="tabpanel">
+              <h3 class="mb-4">Credit / Deferred Payment</h3>
+              <div class="card p-4 border-warning">
+                <form id="creditForm" class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Buyer Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="credBuyer"
+                      minlength="2"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">National ID (NIN)</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="credNIN"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Amount Due (UgX)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="credAmount"
+                      minlength="5"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Due Date</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="credDueDate"
+                      required
+                    />
+                  </div>
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-warning">
+                      Save Record
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-director" role="tabpanel">
+              <h3 class="mb-4">Total Business Aggregates</h3>
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="card stats-card bg-primary text-white p-4">
+                    <h6>Total Revenue Accumulated</h6>
+                    <h1 id="totalRev">UgX 0</h1>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card stats-card bg-secondary text-white p-4">
+                    <h6>Total Tonnage Distributed</h6>
+                    <h1 id="totalTon">0 kg</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

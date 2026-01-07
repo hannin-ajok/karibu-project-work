@@ -1,0 +1,63 @@
+:root {
+    --sidebar-bg: #212529;
+    --primary-color: #0d6efd;
+}
+
+body {
+    background-color: #f4f7f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    border-radius: 15px;
+    border: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.sidebar {
+    min-height: 100vh;
+    background: var(--sidebar-bg);
+    color: white;
+    position: fixed;
+}
+
+main {
+    margin-left: 16.6%; /* Matches col-md-2 */
+}
+
+.nav-link {
+    color: #adb5bd;
+    transition: all 0.3s;
+}
+
+.nav-link:hover {
+    color: white;
+    background: rgba(255,255,255,0.1);
+}
+
+.nav-link.active {
+    background: var(--primary-color) !important;
+    font-weight: bold;
+}
+
+.stats-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

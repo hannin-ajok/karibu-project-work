@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^17.0.0"
+  },
+ "lint-staged": {
+"*.js": [
+"eslint --fix",
+"prettier --write"
+]
+} 
+}
+
+
+
+
